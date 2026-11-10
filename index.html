@@ -64,7 +64,44 @@ pre{white-space:pre-wrap;background:var(--bg);padding:12px;border-radius:12px;fo
 .ph{display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid var(--n);padding-bottom:12px;color:var(--n)}
 .sg{margin-top:56px;border-top:1px solid var(--n);width:260px;font-size:12px}
 @media(min-width:700px){dialog{margin:auto;border-radius:20px}.fg{grid-template-columns:1fr 1fr}.cds{grid-template-columns:1fr 1fr}.ir{grid-template-columns:1.2fr 1.6fr 70px 100px 40px}.grid{grid-template-columns:repeat(4,1fr)}.bn{justify-content:center;gap:24px}.fab{right:calc(50% - 340px)}}
-@media print{.bn,.fab,.hd button,.chips,.nop,dialog,.hero,.cd-a,.srch{display:none!important}body{background:#fff}main{padding:0;max-width:none}body.pdoc #app{display:none}body.pdoc #doc{display:block;color:#000}}
+@page{size:A4;margin:10mm}
+@media print{
+.bn,.fab,.hd button,.chips,.nop,dialog,.hero,.cd-a,.srch{display:none!important}
+body{background:#fff}main{padding:0;max-width:none}
+body.pdoc #app{display:none}
+body.pdoc #doc{display:block;color:#000;font:11px/1.35 Helvetica,Arial,sans-serif;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+#doc *{box-sizing:border-box}
+#doc .dch{display:flex;justify-content:space-between;align-items:center;gap:12px;padding-bottom:6px;border-bottom:2px solid #000}
+#doc .dcl img{display:block;max-height:64px;max-width:200px}
+#doc .dcr{text-align:right;font-size:11px;line-height:1.45}#doc .dcr b{display:block;font-size:14px}
+#doc .dctt{margin:8px 0;padding:6px;border:3px double #000;text-align:center;font-size:16px;letter-spacing:.4px;color:#000}
+#doc .dcw{break-inside:avoid;margin-bottom:6px}
+#doc .dcs{margin:0;padding:3px 8px;border:1.5px solid #000;background:#e8e8e8;font-size:10px;letter-spacing:.5px;text-transform:uppercase;color:#000}
+#doc .dcs small{font-weight:500;text-transform:none;letter-spacing:0;color:#000}
+#doc .dcg{display:grid;border:1.5px solid #000;border-top:0}
+#doc .dcg.c2{grid-template-columns:1fr 1fr}
+#doc .dcg>div{padding:3px 8px;border-bottom:1px solid #000;min-height:30px;font-size:12px;white-space:pre-wrap}
+#doc .dcg.c2>div:nth-child(odd){border-right:1px solid #000}
+#doc .dcg.c2>div:nth-last-child(-n+2),#doc .dcg.c1>div:last-child{border-bottom:0}
+#doc .dcg small{display:block;font-size:8.5px;text-transform:uppercase;letter-spacing:.4px;color:#333}
+#doc .dcg .dcm{min-height:44px}
+#doc table{width:100%;border-collapse:collapse;border:1.5px solid #000;border-top:0}
+#doc th,#doc td{padding:3px 6px;border:1px solid #000;font-size:11px;text-align:left;color:#000}
+#doc th{background:#f0f0f0;font-size:10px;text-transform:uppercase}
+#doc tr{break-inside:avoid}
+#doc thead th{border-top:0}
+#doc .dck th:not(:first-child),#doc .dck td.dcx{text-align:center;width:17%}
+#doc .dck td.dcx{font:12px "Courier New",monospace;white-space:nowrap}
+#doc .dcn{text-align:right}
+#doc tfoot td{font-weight:700;background:#f6f6f6}
+#doc tfoot tr:last-child td{font-size:13px;background:#e8e8e8}
+#doc .dcb{border:1.5px solid #000;border-top:0;padding:6px 8px;font-size:10px;line-height:1.4;text-align:justify}
+#doc .dcb p{margin:0 0 4px}#doc .dcb p:last-child{margin:0}
+#doc .dcf{display:flex;gap:28px;margin-top:6px;break-inside:avoid}
+#doc .dcf>div{flex:1;margin-top:44px;padding-top:4px;border-top:1px solid #000;text-align:center;font-size:11px}
+#doc .dcf small{display:block;font-size:10px;margin-top:6px}
+#doc .dcz{margin-top:10px;text-align:center;font-size:9px;color:#444}
+}
 .kcf{position:fixed;right:25px;bottom:calc(154px + env(safe-area-inset-bottom));width:44px;height:44px;padding:0;border:0;border-radius:50%;background:#fff;color:var(--b);box-shadow:0 6px 16px rgba(16,32,64,.22);display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:21}
 .kcf[hidden]{display:none}.kcf svg{width:22px;height:22px}
 dialog>.kcf{position:absolute;top:12px;right:12px;bottom:auto;width:36px;height:36px;background:#EAF2FD;box-shadow:none}
@@ -197,13 +234,20 @@ function rel(){const{vs,L}=rl(),vn=o=>(db.vendedores.find(x=>x.id==o.vend)||{}).
 return`<div class="hd"><h1>Relatório de ${vs?'vendas':'serviços'}</h1><div><button class="btn g" onclick="mailR()">Enviar por e-mail</button> <button class="btn" onclick="window.print()">Imprimir</button></div></div><div class="row nop"><label>Tipo<select onchange="rf.t=this.value;go('rel')"><option value="o">Serviços (OS)</option><option value="v" ${vs?'selected':''}>Vendas</option></select></label><label>De<input type="date" value="${rf.a}" onchange="rf.a=this.value;go('rel')"></label><label>Até<input type="date" value="${rf.b}" onchange="rf.b=this.value;go('rel')"></label>${vs?'':`<label>Situação<select onchange="rf.s=this.value;go('rel')"><option value="">Todas</option>${ST.map(s=>`<option ${s==rf.s?'selected':''}>${s}</option>`).join('')}</select></label>`}</div><table><tr><th>Nº<th>Data<th>Cliente<th>${vs?'Forma':'Aparelho'}<th>${vs?'Vendedor':'Situação'}<th>Total<th>Pago</tr>${L.map(o=>`<tr><td>${o.n}<td>${D(o.data)}<td>${esc(cn(o.cli))}<td>${esc(vs?o.forma:o.apar)}<td>${esc(vs?vn(o):o.st)}<td>${R(tot$(o))}<td>${R(vs?tot$(o):o.pago)}</tr>`).join('')}<tr><th colspan="5">${L.length} registros<th>${R(L.reduce((a,o)=>a+tot$(o),0))}<th>${R(L.reduce((a,o)=>a+(vs?tot$(o):o.pago),0))}</tr></table>`}
 function mailR(){const{vs,L}=rl(),t=`Relatório de ${vs?'vendas':'serviços'} · MicroLab\n${L.length} registros · Total ${R(L.reduce((a,o)=>a+tot$(o),0))}\n\n`+L.slice(0,30).map(o=>`#${o.n} ${D(o.data)} ${cn(o.cli)||''} ${R(tot$(o))}`).join('\n');location.href='mailto:?subject='+encodeURIComponent('Relatório MicroLab')+'&body='+encodeURIComponent(t)}
 
-function pr(id){const o=db.os.find(x=>x.id==id),c=db.clientes.find(x=>x.id==o.cli)||{},t=db.tecnicos.find(x=>x.id==o.tec),lg=db.cfg.logoL||LG_L;
-$('#doc').innerHTML=`<div class="ph">${lg?`<img class="lg" src="${lg}" alt="MicroLab">`:'<div class="sig">Micro<b>Lab</b><small>Assistência técnica</small></div>'}<div style="text-align:right;font-size:12px">WhatsApp (71) 99129-3552<br>Instagram @microlabssa</div></div>
-<h2>${o.st=='Orçamento'?'Orçamento':'Ordem de serviço'} nº ${o.n} · ${D(o.data)}</h2>
-<p><b>Cliente:</b> ${esc(c.nome)} ${esc(c.tel)}<br><b>Aparelho:</b> ${esc(o.apar)}<br><b>Defeito relatado:</b> ${esc(o.defeito)}<br><b>Situação:</b> ${o.st}${t?'<br><b>Técnico:</b> '+esc(t.nome):''}</p>
-<table><tr><th>Descrição<th>Qtd<th>Valor<th>Subtotal</tr>${o.preco>0?`<tr><td>${esc(o.svn||'Serviço')}<td>1<td>${R(o.preco)}<td>${R(o.preco)}`:''}${o.itens.map(x=>`<tr><td>${esc(x.d)}<td>${x.q}<td>${R(x.v)}<td>${R(x.q*x.v)}`).join('')}</table>
-<p style="text-align:right">${o.desc?'Desconto: '+R(o.desc)+'<br>':''}<b>Total: ${R(tot$(o))}</b></p><p>${esc(o.obs)}</p><p style="font-size:12px">${esc(db.cfg.cond)}</p>
-<div class="sg">Assinatura do cliente</div><p style="font-size:12px;margin-top:24px">Orçamento antes do serviço.</p>`;
+function pr(id){const o=db.os.find(x=>x.id==id),c=db.clientes.find(x=>x.id==o.cli)||{},t=db.tecnicos.find(x=>x.id==o.tec),lg=db.cfg.logoL||LG_L,it=o.itens||[],
+sub=(+o.preco||0)+it.reduce((a,x)=>a+(+x.q||0)*(+x.v||0),0),
+CK=['Aparelho liga?','Tela/Vidro quebrado?','Alto-falante ok?','Câmeras ok?','Conector de carga ok?','Marcas de uso/Arranhões?','Contato com líquido?'],
+bx='<td class="dcx">[&nbsp;&nbsp;&nbsp;]</td>',
+cl=(l,v,k)=>`<div${k?` class="${k}"`:''}><small>${l}</small>${v||'&nbsp;'}</div>`;
+$('#doc').innerHTML=`<div class="dch"><div class="dcl">${lg?`<img src="${lg}" alt="MicroLab">`:'<div class="sig">Micro<b>Lab</b><small>Assistência técnica</small></div>'}</div><div class="dcr"><b>MicroLab · Assistência Técnica</b>WhatsApp (71) 99129-3552<br>Instagram @microlabssa<br>Impresso em ${new Date().toLocaleDateString('pt-BR')}</div></div>
+<h1 class="dctt">ORDEM DE SERVIÇO Nº ${o.n} - ${esc(String(o.st||'').toUpperCase())}</h1>
+<div class="dcw"><h3 class="dcs">Dados do cliente</h3><div class="dcg c2">${cl('Nome do cliente',esc(c.nome))}${cl('Telefone / WhatsApp',esc(c.tel))}${cl('Data de entrada',D(o.data))}${cl('Técnico responsável',t?esc(t.nome):'')}</div></div>
+<div class="dcw"><h3 class="dcs">Dados do aparelho</h3><div class="dcg c1">${cl('Marca / Modelo',esc(o.apar))}${cl('Defeito relatado',esc(o.defeito))}${cl('Observações',esc(o.obs),'dcm')}</div></div>
+<div class="dcw"><h3 class="dcs">Checklist de entrada <small>(preencher a caneta no balcão)</small></h3><table class="dck"><thead><tr><th>Item<th>Sim<th>Não<th>Não testado</tr></thead>${CK.map(x=>`<tr><td>${x}${bx}${bx}${bx}</tr>`).join('')}</table></div>
+<div class="dcw"><h3 class="dcs">Descrição de serviços e valores</h3><table><thead><tr><th>Descrição<th class="dcn">Qtd<th class="dcn">Valor<th class="dcn">Subtotal</tr></thead>${o.preco>0?`<tr><td>${esc(o.svn||'Serviço')}<td class="dcn">1<td class="dcn">${R(o.preco)}<td class="dcn">${R(o.preco)}`:''}${it.map(x=>`<tr><td>${esc(x.d)}<td class="dcn">${x.q}<td class="dcn">${R(x.v)}<td class="dcn">${R(x.q*x.v)}`).join('')}${o.preco>0||it.length?'':'<tr><td colspan="4">&nbsp;</tr>'}<tfoot><tr><td colspan="3" class="dcn">Subtotal<td class="dcn">${R(sub)}</tr><tr><td colspan="3" class="dcn">Desconto<td class="dcn">${o.desc?'- ':''}${R(o.desc||0)}</tr><tr><td colspan="3" class="dcn">VALOR TOTAL<td class="dcn">${R(tot$(o))}</tr></tfoot></table></div>
+<div class="dcw"><h3 class="dcs">Termos legais e garantia</h3><div class="dcb"><p><b>CONDIÇÕES DE EXECUÇÃO:</b> Atenção, a não retirada do aparelho no prazo de 90 dias implicará na venda do mesmo para pagamentos de gastos (Art. 6º, Item 3 do CDC).</p><p><b>TERMO DE GARANTIA:</b> Garantia de 90 dias referentes apenas ao serviço executado e peça trocada (Art. 26, II, CDC). A garantia <b>NÃO COBRE</b> mau uso, quebras, trincos, riscos, quedas, pressão no display ou contato com líquidos/oxidação. O aparelho perde sua resistência à água após aberto.</p>${db.cfg.cond?`<p><b>CONDIÇÕES ADICIONAIS:</b> ${esc(db.cfg.cond)}</p>`:''}</div></div>
+<div class="dcf"><div>Assinatura do Cliente<small>${esc(c.nome)}</small><small>Data: ____/____/________</small></div><div>Assinatura do Técnico<small>${t?esc(t.nome):'&nbsp;'}</small><small>Data: ____/____/________</small></div></div>
+<p class="dcz">Orçamento antes do serviço.</p>`;
 document.body.classList.add('pdoc');window.print();document.body.classList.remove('pdoc')}
 
 function up(k,inp){const f=inp.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{const i=new Image();i.onload=()=>{const s=Math.min(1,(k=='bgImg'?1280:480)/i.width),c=document.createElement('canvas');c.width=i.width*s;c.height=i.height*s;c.getContext('2d').drawImage(i,0,0,c.width,c.height);db.cfg[k]=c.toDataURL(k=='bgImg'?'image/jpeg':'image/png',.85);save();go('cfg')};i.src=r.result};r.readAsDataURL(f)}
