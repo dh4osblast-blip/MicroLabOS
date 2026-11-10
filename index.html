@@ -193,7 +193,7 @@ return`<div class="hero" style="${bgcss()}"><div class="hero-t"><div><small>Olá
 function crud(v){const c=C[v];
 return`<div class="hd"><h1>${c.t}</h1>${v=='estoque'?'<div class="chips"><button class="btn g" onclick="reaj()">Reajustar preços</button><button class="btn g" onclick="cpForm(1)">Reposição</button><button class="ab" onclick="dicaPreco()" title="Dica de Preço Justo" aria-label="Dica de Preço Justo">?</button></div>':''}</div>${lst(db[c.k].map(r=>({av:v=='estoque'?'':av2(r),t:esc(r.nome),s:esc(SUB[v](r)),b:v=='estoque'&&low(r)?'repor':'',bc:'wa',v:v=='estoque'?R(r.preco):'',on:`edit('${v}','${r.id}')`,a:ab('Excluir',`del('${v}','${r.id}')`,1)})),'Nada cadastrado ainda. Toque no + para adicionar.')}`}
 function edit(v,id){const c=C[v],r=db[c.k].find(x=>x.id==id)||{};
-opn(`<h2>${r.id?'Editar':'Novo'} · ${c.t}${v=='estoque'?' <button type="button" class="ab" onclick="dicaPreco()" title="Dica de Preço Justo" aria-label="Dica de Preço Justo">?</button>':''}</h2><form class="fg" onsubmit="return sv(event,'${v}','${r.id||''}')">${c.f.map(([k,l,t])=>t=='f'?`<label class="w">${l}<input type="file" accept="image/*" onchange="ph(this)"><input type="hidden" name="${k}" value="${esc(r[k])}"></label>`:`<label>${l}<input name="${k}" value="${esc(r[k])}" ${t=='r'?'required':''} ${t=='n'?'type="number" step="0.01" min="0"':''} ${t=='d'?'type="date"':''} ${v=='estoque'&&k=='custo'?'oninput="autoPreco(this)"':''}></label>`).join('')}${v=='estoque'?`<p class="nt w">Ao digitar o custo, o preço é calculado com a margem padrão de ${MG()}% (Ajustes). Você pode alterar o preço depois.</p>`:''}${foot()}</form>`)}
+opn(`<h2>${r.id?'Editar':'Novo'} · ${c.t}${v=='estoque'?' <button type="button" class="ab" onclick="dicaPreco()" title="Dica de Preço Justo" aria-label="Dica de Preço Justo">?</button>':''}</h2><form class="fg" onsubmit="return sv(event,'${v}','${r.id||''}')">${c.f.map(([k,l,t])=>t=='f'?`<label class="w">${l}<input type="file" accept="image/*" onchange="ph(this)"><input type="hidden" name="${k}" value="${esc(r[k])}"></label>`:`<label>${l}<input name="${k}" value="${esc(r[k])}" ${t=='r'?'required':''} ${t=='n'?'type="number" step="0.01" min="0"':''} ${t=='d'?'type="date"':''} ${v=='estoque'&&k=='custo'?'oninput="autoPreco(this)"':''}></label>`).join('')}${v=='estoque'?`<p class="nt w">${txtMargem()}</p>`:''}${foot()}</form>`)}
 function ph(i){const f=i.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{const m=new Image();m.onload=()=>{const c=document.createElement('canvas'),s=160/Math.min(m.width,m.height);c.width=m.width*s;c.height=m.height*s;c.getContext('2d').drawImage(m,0,0,c.width,c.height);i.nextElementSibling.value=c.toDataURL('image/jpeg',.8)};m.src=r.result};r.readAsDataURL(f)}
 function sv(e,v,id){e.preventDefault();const c=C[v],o=Object.fromEntries(new FormData(e.target));c.f.forEach(([k,,t])=>{if(t=='n')o[k]=+o[k]||0});
 if(id)Object.assign(db[c.k].find(x=>x.id==id),o);else db[c.k].push({id:uid(),...o});save();dl.close();go(cur);return false}
@@ -218,8 +218,8 @@ function ri(){$('#its').innerHTML=it.map((x,i)=>`<div class="ir"><select onchang
 function pick(i,id){const p=db.produtos.find(x=>x.id==id);it[i].p=id||undefined;if(p){it[i].d=p.nome;it[i].v=p[ik]||0}ri()}
 function tot(){const e=$('#dl form').elements,pe=e.namedItem('preco');$('#tt').textContent=R((pe?+pe.value||0:0)+sum(it,e.desc.value))}
 function svOS(e,id){e.preventDefault();const f=Object.fromEntries(new FormData(e.target));f.desc=+f.desc||0;f.itens=it.filter(x=>x.d);['peca','cons','horas','preco'].forEach(k=>f[k]=+f[k]||0);f.svn=(db.servicos.find(x=>x.id==f.svc)||{}).nome||'';{const P=PR();f.cd=f.peca+f.cons+f.horas*(P.hora+P.indireto)}
-let o=db.os.find(x=>x.id==id);if(!o){o={id:uid(),n:db.n++,data:new Date().toISOString().slice(0,10),pago:0};db.os.push(o)}
-Object.assign(o,f);
+let o=db.os.find(x=>x.id==id);if(!o){o={id:uid(),n:db.n++,data:today(),pago:0};db.os.push(o)}
+const sinalNovo=f.sinal;delete f.sinal;Object.assign(o,f);osV7(o,sinalNovo);
 if(o.st=='Entregue'&&!o.baixa){o.itens.forEach(x=>{const p=db.produtos.find(y=>y.id==x.p);if(p)p.qtd=(+p.qtd||0)-x.q});if(o.pp){const p=db.produtos.find(y=>y.id==o.pp);if(p)p.qtd=(+p.qtd||0)-1}o.baixa=1}
 save();dl.close();go(cur);return false}
 
@@ -245,7 +245,7 @@ $('#doc').innerHTML=`<div class="dch"><div class="dcl">${lg?`<img src="${lg}" al
 <div class="dcw"><h3 class="dcs">Dados do aparelho</h3><div class="dcg c1">${cl('Marca / Modelo',esc(o.apar))}${cl('Defeito relatado',esc(o.defeito))}${cl('Observações',esc(o.obs),'dcm')}</div></div>
 <div class="dcw"><h3 class="dcs">Checklist de entrada <small>(preencher a caneta no balcão)</small></h3><table class="dck"><thead><tr><th>Item<th>Sim<th>Não<th>Não testado</tr></thead>${CK.map(x=>`<tr><td>${x}${bx}${bx}${bx}</tr>`).join('')}</table></div>
 <div class="dcw"><h3 class="dcs">Descrição de serviços e valores</h3><table><thead><tr><th>Descrição<th class="dcn">Qtd<th class="dcn">Valor<th class="dcn">Subtotal</tr></thead>${o.preco>0?`<tr><td>${esc(o.svn||'Serviço')}<td class="dcn">1<td class="dcn">${R(o.preco)}<td class="dcn">${R(o.preco)}`:''}${it.map(x=>`<tr><td>${esc(x.d)}<td class="dcn">${x.q}<td class="dcn">${R(x.v)}<td class="dcn">${R(x.q*x.v)}`).join('')}${o.preco>0||it.length?'':'<tr><td colspan="4">&nbsp;</tr>'}<tfoot><tr><td colspan="3" class="dcn">Subtotal<td class="dcn">${R(sub)}</tr><tr><td colspan="3" class="dcn">Desconto<td class="dcn">${o.desc?'- ':''}${R(o.desc||0)}</tr><tr><td colspan="3" class="dcn">VALOR TOTAL<td class="dcn">${R(tot$(o))}</tr></tfoot></table></div>
-<div class="dcw"><h3 class="dcs">Termos legais e garantia</h3><div class="dcb"><p><b>CONDIÇÕES DE EXECUÇÃO:</b> Atenção, a não retirada do aparelho no prazo de 90 dias implicará na venda do mesmo para pagamentos de gastos (Art. 6º, Item 3 do CDC).</p><p><b>TERMO DE GARANTIA:</b> Garantia de 90 dias referentes apenas ao serviço executado e peça trocada (Art. 26, II, CDC). A garantia <b>NÃO COBRE</b> mau uso, quebras, trincos, riscos, quedas, pressão no display ou contato com líquidos/oxidação. O aparelho perde sua resistência à água após aberto.</p>${db.cfg.cond?`<p><b>CONDIÇÕES ADICIONAIS:</b> ${esc(db.cfg.cond)}</p>`:''}</div></div>
+<div class="dcw"><h3 class="dcs">Termos legais e garantia</h3><div class="dcb">${termosImp(o)}</div></div>
 <div class="dcf"><div>Assinatura do Cliente<small>${esc(c.nome)}</small><small>Data: ____/____/________</small></div><div>Assinatura do Técnico<small>${t?esc(t.nome):'&nbsp;'}</small><small>Data: ____/____/________</small></div></div>
 <p class="dcz">Orçamento antes do serviço.</p>`;
 document.body.classList.add('pdoc');window.print();document.body.classList.remove('pdoc')}
@@ -255,8 +255,123 @@ async function addU(e){e.preventDefault();const f=Object.fromEntries(new FormDat
 function delU(id){if(id==user.id)return alert('Você não pode excluir o usuário em uso.');if(confirm('Excluir este usuário?')){db.users=db.users.filter(x=>x.id!=id);save();go('cfg')}}
 function exp(){db.cfg.lastBk=today();save();const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(db)],{type:'application/json'}));a.download='microlab-backup-'+new Date().toISOString().slice(0,10)+'.json';a.click()}
 function imp(inp){const f=inp.files[0];if(f)f.text().then(t=>{if(confirm('Substituir todos os dados atuais pelo backup?')){db=JSON.parse(t);save();location.reload()}})}
-const today=()=>new Date().toISOString().slice(0,10);
-const fx=(t,d,v)=>db.fin.push({id:uid(),data:today(),t,d,v:+v});
+const today=()=>hoje();
+const fx=(t,d,v,cat)=>db.fin.push({id:uid(),data:today(),t,d,v:+v,...(cat?{cat}:{})});
+/* ===== V7 · NÚCLEO (dados + lógica; sem UI) ===== */
+const DB_VER=7;
+const TXT_COND0='Atenção, a não retirada do aparelho no prazo de 90 dias implicará na venda do mesmo para pagamentos de gastos (Art. 6º, Item 3 do CDC).';
+const TXT_GAR0='Garantia de {dias} dias referentes apenas ao serviço executado e peça trocada (Art. 26, II, CDC). A garantia NÃO COBRE mau uso, quebras, trincos, riscos, quedas, pressão no display ou contato com líquidos/oxidação. O aparelho perde sua resistência à água após aberto.';
+const CK_V7=[['liga','Liga?'],['tela','Tela ok?'],['audio','Áudio ok?'],['molhou','Molhou?']]; /* valores: 's' sim · 'n' não · 'nt' não testado */
+const APROV=['Aprovado','Em reparo','Pronto','Entregue'],FILA=['Em reparo','Aprovado'];
+
+/* ---------- datas (sempre locais; toISOString() usa UTC e erra à noite no Brasil) ---------- */
+const hoje=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
+const pd=iso=>{const[y,m,d]=iso.split('-').map(Number);return new Date(y,m-1,d)};
+const addDias=(iso,n)=>{const x=pd(iso);x.setDate(x.getDate()+n);return x.getFullYear()+'-'+String(x.getMonth()+1).padStart(2,'0')+'-'+String(x.getDate()).padStart(2,'0')};
+const difDias=(a,b)=>{const x=pd(a),y=pd(b);return Math.round((Date.UTC(y.getFullYear(),y.getMonth(),y.getDate())-Date.UTC(x.getFullYear(),x.getMonth(),x.getDate()))/864e5)};
+const norm=s=>String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim().toLowerCase();
+
+/* ---------- migração: idempotente, roda a cada abertura, mesma chave do localStorage (nada se perde) ---------- */
+function migrarV7(){
+ const c=db.cfg,ini=(o,k,v)=>{if(o[k]===undefined)o[k]=v};
+ ini(c,'margem',{ativa:true,limite:50,baixa:{min:100,max:200},alta:{min:20,max:30},teto:300,modo:'gradual'});
+ ini(c,'termoGarantia',TXT_GAR0);ini(c,'condExec',TXT_COND0);ini(c,'garantiaDias',90);
+ if(!Array.isArray(c.horario)||c.horario.length!=7)c.horario=[0,6,6,6,6,6,4]; /* índice = getDay(): 0 dom … 6 sáb */
+ ini(c,'entrega',[]);ini(c,'metaMensal',0);ini(c,'diasInativo',90);
+ ini(c,'origens',['Instagram','Indicação','Rua','Google','WhatsApp','Outro']);
+ ini(c,'catDespesa',['Aluguel','Peças','Ferramentas','Energia/Internet','Outros']);
+ ini(db,'custosFixos',[]);
+ db.clientes.forEach(x=>['origem','cpf','cep','rua','num','bairro','ref'].forEach(k=>ini(x,k,'')));
+ db.produtos.forEach(p=>{ini(p,'forn','');ini(p,'local','');ini(p,'compat','');ini(p,'precoManual',false)});
+ db.fornecedores.forEach(f=>{ini(f,'prazo','');ini(f,'link','')});
+ db.os.forEach(osDef);
+ db.ver=DB_VER;
+}
+function osDef(o){const ini=(k,v)=>{if(o[k]===undefined)o[k]=v};
+ ['marca','modelo','imei','senha'].forEach(k=>ini(k,''));ini('acess',[]);ini('itens',[]);ini('sinal',0);ini('pago',0);
+ ini('chk',{});CK_V7.forEach(([k])=>{if(o.chk[k]===undefined)o.chk[k]='nt'});
+ ini('hist',[{st:o.st,dt:o.data||hoje()}]);return o}
+
+/* ---------- margem dinâmica por faixa de custo ---------- */
+function margemPct(custo){const M=db.cfg.margem;if(!M||!M.ativa)return MG();
+ const c=+custo||0,alta=c>M.limite,r=alta?M.alta:M.baixa,lo=+r.min,hi=+r.max;
+ if(M.modo=='min')return lo;if(M.modo=='max')return hi;if(M.modo=='med')return(lo+hi)/2;
+ /* gradual: dentro da faixa, quanto mais barata a peça, maior a margem */
+ const t=alta?Math.min(1,(c-M.limite)/Math.max(1,M.teto-M.limite)):Math.min(1,c/M.limite);
+ return hi-(hi-lo)*t}
+const precoVenda=custo=>{const c=+custo||0;return c>0?Math.round(c*(1+margemPct(c)/100)*100)/100:0};
+function txtMargem(){const M=db.cfg.margem;if(!M||!M.ativa)return`Ao digitar o custo, o preço é calculado com a margem padrão de ${MG()}% (Ajustes). Você pode alterar o preço depois.`;
+ return`Ao digitar o custo, o preço sai pela margem por faixa: até ${R(M.limite)} → ${M.baixa.min}% a ${M.baixa.max}%; acima → ${M.alta.min}% a ${M.alta.max}%. Você pode alterar o preço depois.`}
+function recalcPreco(p){if(!p.precoManual&&+p.custo>0)p.preco=precoVenda(p.custo);return p}
+const recalcTodosPrecos=()=>db.produtos.forEach(recalcPreco);
+
+/* ---------- garantia dinâmica ---------- */
+function diasGarantia(o){const sv=db.servicos.find(x=>x.id==o.svc),g=o.garManual!==undefined&&o.garManual!==''?o.garManual:(sv&&sv.gar!==undefined&&sv.gar!==''?sv.gar:db.cfg.garantiaDias);return Math.max(0,Math.round(+g||0))}
+function aplicaGarantia(o){
+ if(o.st=='Entregue'){if(!o.dtEntrega){o.dtEntrega=hoje();o.gar=diasGarantia(o);o.garAte=o.gar>0?addDias(o.dtEntrega,o.gar):''}}
+ else{delete o.dtEntrega;delete o.garAte;delete o.gar}}
+const garTxt=o=>o.garAte?'Garantia válida até '+D(o.garAte):'';
+function termosImp(o){const c=db.cfg,dias=o.gar??diasGarantia(o),sb=s=>esc(String(s||'').replace(/\{dias\}/g,dias).replace(/\{ate\}/g,o.garAte?D(o.garAte):'___/___/______'));
+ return`<p><b>CONDIÇÕES DE EXECUÇÃO:</b> ${sb(c.condExec)}</p><p><b>TERMO DE GARANTIA:</b> ${sb(c.termoGarantia)}</p>${o.garAte?`<p><b>${esc(garTxt(o))}</b></p>`:''}${c.cond?`<p><b>CONDIÇÕES ADICIONAIS:</b> ${esc(c.cond)}</p>`:''}`}
+
+/* ---------- OS: histórico de status, sinal/saldo, taxa de entrega ---------- */
+function registraHist(o){o.hist=o.hist||[];if(!o.hist.length||o.hist[o.hist.length-1].st!=o.st)o.hist.push({st:o.st,dt:hoje()})}
+const saldoOS=o=>Math.max(0,tot$(o)-(+o.pago||0));
+function aplicaSinal(o,novo){novo=Math.max(0,+novo||0);const d=novo-(+o.sinal||0);if(Math.abs(d)<0.005)return;
+ o.pago=(+o.pago||0)+d;o.sinal=novo;fx(d>0?'e':'s','OS nº '+o.n+(d>0?' (sinal)':' (ajuste de sinal)'),Math.abs(d))}
+function taxaBairro(cliId){const c=db.clientes.find(x=>x.id==cliId);if(!c||!c.bairro)return null;const t=db.cfg.entrega.find(x=>norm(x.bairro)==norm(c.bairro));return t?{bairro:t.bairro,valor:+t.valor||0}:null}
+function aplicaEntrega(itens,cliId){const L=itens.filter(x=>!x.entrega),t=taxaBairro(cliId);if(t&&t.valor>0)L.push({d:'Taxa de entrega – '+t.bairro,q:1,v:t.valor,entrega:true});return L}
+function osV7(o,sinalNovo){osDef(o);registraHist(o);aplicaGarantia(o);if(sinalNovo!==undefined)aplicaSinal(o,sinalNovo)}
+
+/* ---------- agenda de bancada ---------- */
+const capDia=iso=>Math.max(0,+db.cfg.horario[pd(iso).getDay()]||0);
+const osFila=excl=>db.os.filter(o=>FILA.includes(o.st)&&o.id!=excl&&(+o.horas||0)>0).sort((a,b)=>FILA.indexOf(a.st)-FILA.indexOf(b.st)||a.n-b.n);
+/* extra={horas,id}: OS hipotética entrando no fim da fila (simulador). Devolve dias[], fila[] (com ini/fim) */
+function planoAgenda(extra){
+ const fila=osFila(extra&&extra.id).map(o=>({os:o.id,n:o.n,h:+o.horas,sim:false}));
+ if(extra&&+extra.horas>0)fila.push({os:(extra&&extra.id)||'__novo',n:null,h:+extra.horas,sim:true});
+ const dias=[],mapa={};let d=hoje(),guard=0;
+ const dia=()=>mapa[d]||(mapa[d]=dias[dias.push({data:d,cap:capDia(d),usado:0,blocos:[]})-1]);
+ for(const it of fila){let rest=it.h;it.ini=null;it.fim=null;
+  while(rest>1e-9){if(++guard>4000)return{dias,fila,erro:'Sem horas de bancada configuradas.'};
+   const dd=dia(),livre=dd.cap-dd.usado;if(livre<=1e-9){d=addDias(d,1);continue}
+   const h=Math.min(rest,livre);dd.blocos.push({os:it.os,n:it.n,h,sim:it.sim,de:dd.usado});dd.usado+=h;rest-=h;it.ini=it.ini||d;it.fim=d}}
+ return{dias,fila,erro:null}}
+function previsaoEntrega(horas,idExcluir){if(!(+horas>0))return null;const p=planoAgenda({horas:+horas,id:idExcluir||'__novo'});if(p.erro)return null;const s=p.fila.find(x=>x.sim);return s&&s.fim?{ini:s.ini,prev:s.fim}:null}
+
+/* ---------- compras e fornecedores ---------- */
+function receberCompra(o){if(o.st=='Recebido')return[];const mud=[];
+ o.itens.forEach(x=>{const p=db.produtos.find(y=>y.id==x.p);if(!p)return;const a={nome:p.nome,custo0:+p.custo||0,preco0:+p.preco||0};
+  p.qtd=(+p.qtd||0)+x.q;if(+x.v>0){p.custo=+x.v;recalcPreco(p)}
+  mud.push({...a,custo1:+p.custo||0,preco1:+p.preco||0,manual:!!p.precoManual})});
+ o.st='Recebido';o.dtReceb=hoje();fx('s','Compra nº '+o.n,tot$(o),'Peças');return mud}
+const totalFornecedor=fid=>db.compras.filter(o=>o.forn==fid&&o.st=='Recebido').reduce((a,o)=>a+tot$(o),0);
+function prazoRealForn(fid){const L=db.compras.filter(o=>o.forn==fid&&o.st=='Recebido'&&o.dtReceb);return L.length?L.reduce((a,o)=>a+difDias(o.data,o.dtReceb),0)/L.length:null}
+
+/* ---------- financeiro e indicadores ---------- */
+function lancaDespesa(f){db.fin.push({id:uid(),data:f.data||hoje(),t:'s',d:f.d,v:+f.v,cat:f.cat||'Outros'})}
+function lancarFixosMes(mes){mes=mes||hoje().slice(0,7);let n=0;
+ db.custosFixos.forEach(x=>{if(db.fin.some(l=>l.fixoId==x.id&&l.mes==mes))return;
+  db.fin.push({id:uid(),data:mes+'-'+String(Math.min(28,Math.max(1,+x.dia||1))).padStart(2,'0'),t:'s',d:x.nome,v:+x.valor||0,cat:x.cat||'Outros',fixoId:x.id,mes});n++});return n}
+const custoItens=o=>(o.itens||[]).reduce((a,x)=>{const p=db.produtos.find(y=>y.id==x.p);return a+(p?(+p.custo||0)*x.q:0)},0);
+const recOS=o=>tot$(o)-(o.itens||[]).filter(x=>x.entrega).reduce((a,x)=>a+x.q*x.v,0); /* frete é repasse, não faturamento */
+const lucroOS=o=>{const r=recOS(o);return r-(+o.cd||0)-custoItens(o)-r*PR().taxa}; /* mesma fórmula do pcalc (já desconta hora técnica + indireto) */
+const contribOS=o=>{const r=recOS(o);return r-(+o.peca||0)-(+o.cons||0)-custoItens(o)-r*PR().taxa}; /* antes de hora técnica/indireto: base do ponto de equilíbrio */
+function taxaAprovacao(){const dec=db.os.filter(o=>(o.hist||[]).some(h=>h.st=='Orçamento')&&o.st!='Orçamento'),ok=dec.filter(o=>o.hist.some(h=>APROV.includes(h.st))||APROV.includes(o.st));
+ return{decididos:dec.length,aprovados:ok.length,taxa:dec.length?ok.length/dec.length:null}}
+function clientesInativos(dias){dias=dias||db.cfg.diasInativo||90;const h=hoje(),u={},mk=(id,dt)=>{if(id&&dt&&(!u[id]||dt>u[id]))u[id]=dt};
+ db.os.forEach(o=>mk(o.cli,o.dtEntrega||o.data));db.vendas.forEach(v=>mk(v.cli,v.data));
+ return db.clientes.filter(c=>u[c.id]).map(c=>({c,ult:u[c.id],dias:difDias(u[c.id],h)})).filter(x=>x.dias>dias).sort((a,b)=>b.dias-a.dias)}
+function indicadores(mes){mes=mes||hoje().slice(0,7);
+ const ent=db.os.filter(o=>o.st=='Entregue'&&(o.dtEntrega||o.data).slice(0,7)==mes),vd=db.vendas.filter(v=>!v.st&&(v.data||'').slice(0,7)==mes);
+ const fat=ent.reduce((a,o)=>a+recOS(o),0)+vd.reduce((a,v)=>a+tot$(v),0),lucro=ent.reduce((a,o)=>a+lucroOS(o),0);
+ const fixos=db.custosFixos.reduce((a,x)=>a+(+x.valor||0),0),lim=addDias(hoje(),-90);
+ let base=db.os.filter(o=>o.st=='Entregue'&&(o.dtEntrega||o.data)>=lim);if(!base.length)base=db.os.filter(o=>o.st=='Entregue');
+ const contrib=base.length?base.reduce((a,o)=>a+contribOS(o),0)/base.length:0,qtd=contrib>0?Math.ceil(fixos/contrib):null;
+ return{mes,fat,lucro,os:ent.length,meta:{valor:+db.cfg.metaMensal||0,pct:+db.cfg.metaMensal>0?fat/db.cfg.metaMensal:null},
+  pe:{fixos,contrib,qtd,faltam:qtd==null?null:Math.max(0,qtd-ent.length)},aprov:taxaAprovacao(),inativos:clientesInativos()}}
+/* ===== fim do núcleo V7 ===== */
+
 const dg=t=>{t=(t||'').replace(/\D/g,'');return t.length<=11?'55'+t:t};
 const li=o=>o.itens.map(x=>`${x.q}x ${x.d} - ${R(x.q*x.v)}`).join('\n')+'\n';
 let ik='preco',pxv={v:'',t:''},am=new Date().getMonth()+1,lastTx='';
@@ -279,7 +394,7 @@ function compras(){const L=db.compras.slice().sort((a,b)=>b.n-a.n);
 return`<div class="hd"><h1>Pedidos de compra</h1></div>${lst(L.map(o=>({t:esc((db.fornecedores.find(x=>x.id==o.forn)||{}).nome),s:`Pedido nº ${o.n} · ${D(o.data)}`,b:o.st,bc:o.st=='Pedido'?'wa':'ok',v:R(tot$(o)),on:`snd('cp','${o.id}')`,a:ab('Enviar',`snd('cp','${o.id}')`)+(o.st=='Pedido'?ab('Receber',`recC('${o.id}')`):'')})),'Nenhum pedido. Toque no + para criar.')}`}
 function cpForm(rep){ik='custo';it=rep?db.produtos.filter(low).map(p=>({p:p.id,d:p.nome,q:Math.max((+p.min||0)-(+p.qtd||0),1),v:+p.custo||0})):[];if(rep&&!it.length){alert('Nenhum item abaixo do estoque mínimo.');return}opn(`<h2>Novo pedido de compra</h2><form class="fg" onsubmit="return svC(event)"><label class="w">Fornecedor<select name="forn" required><option value="">Selecione (cadastre em Fornecedores)</option>${db.fornecedores.map(x=>`<option value="${x.id}">${esc(x.nome)}</option>`).join('')}</select></label><div class="w"><b>Itens</b><div id="its"></div><button type="button" class="btn g" onclick="it.push({d:'',q:1,v:0});ri()">Adicionar item</button></div><input type="hidden" name="desc" value="0"><div class="w">Total: <b id="tt"></b></div>${foot()}</form>`);ri()}
 function svC(e){e.preventDefault();const f=Object.fromEntries(new FormData(e.target));f.itens=it.filter(x=>x.d);if(!f.itens.length){alert('Adicione ao menos um item.');return false}db.compras.push({id:uid(),n:db.nc=(db.nc||0)+1,data:today(),st:'Pedido',...f,desc:0});save();dl.close();go(cur);return false}
-function recC(id){const o=db.compras.find(x=>x.id==id);if(!confirm('Marcar como recebido? Os itens entram no estoque e o valor sai do caixa.'))return;o.itens.forEach(x=>{const p=db.produtos.find(y=>y.id==x.p);if(p)p.qtd=(+p.qtd||0)+x.q});o.st='Recebido';fx('s','Compra nº '+o.n,tot$(o));save();go(cur)}
+function recC(id){const o=db.compras.find(x=>x.id==id);if(!o||o.st=='Recebido')return;if(!confirm('Marcar como recebido? Os itens entram no estoque, o custo e o preço de venda são atualizados e o valor sai do caixa.'))return;receberCompra(o);save();go(cur)}
 
 function fin(){const L=db.fin.slice().sort((a,b)=>b.data.localeCompare(a.data)),E=L.filter(x=>x.t=='e').reduce((a,x)=>a+x.v,0),S=L.filter(x=>x.t=='s').reduce((a,x)=>a+x.v,0);
 return`<div class="hd"><h1>Financeiro</h1></div><div class="sum"><div class="sc"><span>Entradas</span><b>${R(E)}</b></div><div class="sc"><span>Saídas</span><b>${R(S)}</b></div><div class="sc"><span>Saldo</span><b>${R(E-S)}</b></div></div>${lst(L.map(x=>({t:esc(x.d),s:D(x.data),b:x.t=='e'?'Entrada':'Saída',bc:x.t=='e'?'ok':'gr',v:(x.t=='e'?'+ ':'− ')+R(x.v),a:ab('Excluir',`dlF('${x.id}')`,1)})),'Nenhum lançamento. Toque no + para registrar.')}`}
@@ -330,9 +445,9 @@ const PR0={hora:71.4286,indireto:19.3214,taxa:0.07,margem:0.20};
 const PR=()=>Object.assign({},PR0,db.cfg.preco||{});
 const MG=()=>{const m=parseFloat(db.cfg.margemEstoque);return isNaN(m)||m<0?50:m};
 function setMG(i){const n=parseFloat(String(i.value).replace(',','.'));db.cfg.margemEstoque=isNaN(n)||n<0?50:n;i.value=db.cfg.margemEstoque;save()}
-function autoPreco(i){const c=parseFloat(i.value),p=i.form&&i.form.elements.namedItem('preco');if(!p||isNaN(c)||c<=0)return;p.value=(Math.round((c+c*(MG()/100))*100)/100).toFixed(2)}
+function autoPreco(i){const c=parseFloat(i.value),p=i.form&&i.form.elements.namedItem('preco');if(!p||isNaN(c)||c<=0)return;p.value=precoVenda(c).toFixed(2)}
 function dicaPreco(){let d=document.getElementById('dica');if(!d){d=document.createElement('dialog');d.id='dica';d.onclick=e=>{if(e.target===d)d.close()};document.body.appendChild(d)}
-d.innerHTML=`<h2 style="margin-top:0">Regra de Bolso para Preço Justo:</h2><ul style="padding-left:18px;margin:0 0 12px"><li><b>Peças Baratas (até R$ 50):</b> Aceitam margem de 100% a 200% para cobrir o risco do serviço (Ex: conector, botões).</li><li style="margin-top:8px"><b>Peças Caras (Telas, etc.):</b> Aplique margem menor na peça (20% a 30%) e foque o lucro no valor fixo da sua Hora Técnica. Nunca venda a peça pelo preço de custo; a margem é o seu seguro contra garantias.</li></ul><p class="nt">Sua margem padrão atual: <b>${MG()}%</b> (altere em Ajustes).</p><button type="button" class="btn" onclick="this.closest('dialog').close()">Entendi</button>`;d.showModal()}
+d.innerHTML=`<h2 style="margin-top:0">Regra de Bolso para Preço Justo:</h2><ul style="padding-left:18px;margin:0 0 12px"><li><b>Peças Baratas (até R$ 50):</b> Aceitam margem de 100% a 200% para cobrir o risco do serviço (Ex: conector, botões).</li><li style="margin-top:8px"><b>Peças Caras (Telas, etc.):</b> Aplique margem menor na peça (20% a 30%) e foque o lucro no valor fixo da sua Hora Técnica. Nunca venda a peça pelo preço de custo; a margem é o seu seguro contra garantias.</li></ul><p class="nt">${db.cfg.margem&&db.cfg.margem.ativa?'Regra atual: até '+R(db.cfg.margem.limite)+' → <b>'+db.cfg.margem.baixa.min+'–'+db.cfg.margem.baixa.max+'%</b>; acima → <b>'+db.cfg.margem.alta.min+'–'+db.cfg.margem.alta.max+'%</b> (altere em Ajustes).':'Sua margem padrão atual: <b>'+MG()+'%</b> (altere em Ajustes).'}</p><button type="button" class="btn" onclick="this.closest('dialog').close()">Entendi</button>`;d.showModal()}
 function setPR(k,v){db.cfg.preco=db.cfg.preco||{};let n=+String(v).replace(',','.')||0;if(k=='taxa'||k=='margem')n/=100;db.cfg.preco[k]=n;save()}
 const SEED=[{"nome": "Diagnóstico de bancada (sem reparo)", "cat": "Diagnóstico", "tempo": 0.5, "cons": 0.0, "peca": ""}, {"nome": "Troca de bateria – smartphone", "cat": "Bateria", "tempo": 0.5, "cons": 2.0, "peca": "Bateria smartphone Galaxy A14"}, {"nome": "Troca de conector de carga (módulo)", "cat": "Conector", "tempo": 0.75, "cons": 2.0, "peca": "Módulo conector de carga USB-C"}, {"nome": "Troca de tela – smartphone", "cat": "Tela", "tempo": 1.0, "cons": 3.0, "peca": "Tela Galaxy A14 (módulo)"}, {"nome": "Tablet – reparo de carga / bateria", "cat": "Tablet", "tempo": 1.5, "cons": 3.0, "peca": "Bateria tablet genérica"}, {"nome": "Limpeza e tratamento de oxidação", "cat": "Limpeza", "tempo": 1.5, "cons": 8.0, "peca": ""}];
 function PB(o){const op=(L,s,fn)=>(L||[]).map(x=>`<option value="${x.id}" ${x.id==s?'selected':''}>${esc(fn(x))}</option>`).join('');
@@ -391,6 +506,7 @@ new MutationObserver(()=>{const on=!!document.getElementById('mn');fab.hidden=!o
 /* dentro dos formulários/modais (que bloqueiam o resto da tela) o botão aparece no canto superior direito */
 new MutationObserver(()=>{if(dl.open&&!dl.querySelector('.kcf'))dl.appendChild(mk())}).observe(dl,{childList:true});
 })();
+{const v0=db.ver;migrarV7();if(v0!==DB_VER)save()}
 auth();
 </script>
 </body>
