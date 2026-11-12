@@ -1,0 +1,14 @@
+## v10 — Agenda de bancada (módulos 4, 5 e 6) — 11/11
+- Novo: aba **Agenda** no menu inferior e atalho na tela inicial. Uma linha por dia da semana, com barra de horas (cada OS é um bloco proporcional ao tempo), horas usadas de horas disponíveis e dia de folga indicado.
+- Novo: navegação entre semanas (Anterior, Próxima, Voltar para hoje). Tocar num bloco ou numa OS abre a OS.
+- Novo: **Fila de bancada** com botões Subir/Descer para definir quem é feito primeiro (grava `ord`). OS sem ordem vão para o fim da fila.
+- Novo: resumo no topo (horas na fila e data em que a fila termina) e etiqueta "pode atrasar" quando a previsão prometida na OS é anterior à da agenda.
+- Novo: **carga horária semanal** editável na própria Agenda e em Ajustes (mesmo bloco), com campo "Seg–Sex de uma vez". Limite de 0 a 24 h por dia.
+- Alterado: `planejar` agora coloca OS sem ordem (`ord` 0) depois das ordenadas. Antes, elas passavam na frente.
+- Alterado: o menu inferior ficou com 5 botões; em telas até 480 px o espaçamento lateral dos botões diminui para caber.
+- Permissões: Agenda liberada para Administrador, Atendente e Técnico. Só o administrador edita a carga horária.
+- Esquema de dados: sem campos novos. Usa `horas[]` e `ord`, que já existiam.
+- Arquivos entregues: index.html, sw.js (cache v10). Manifest não mudou.
+- Testes: 64 verificações automáticas em navegador simulado (jsdom, 11/11/2026, fuso America/Bahia): blocos e larguras, continuação de OS entre dias, reordenação e limites, OS nova sem ordem, troca de semana, carga horária, permissões, aviso de atraso, abertura da OS, todas as telas sem erro, migração idempotente. **Não testado em celular real**, nem a aparência (cores, espaçamento) em tela pequena.
+- Como atualizar: faça backup em Ajustes, suba `index.html` e `sw.js` no repositório (Add file > Upload files), abra o app online uma vez e feche e abra de novo para o cache v10 assumir.
+- Pendente: a agenda considera o dia de hoje inteiro (não desconta horas já passadas) e não desconta o que já foi feito de uma OS em reparo; recebimento parcial de compras; sincronização na nuvem.
