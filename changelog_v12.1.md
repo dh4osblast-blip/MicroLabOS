@@ -1,0 +1,16 @@
+## v12.1 — Tela "Fonte de bancada" (ZK-SK150C) dentro do OS — 15/11
+- Novo: atalho **Fonte** na tela inicial (Administrador e Técnico). Painel escuro com uma "tela" por grandeza (tensão, corrente, potência), grade de osciloscópio, escala automática e linha tracejada do V-SET / I-SET. Cores do visor por padrão; botão alterna para as cores da marca (salvo em `cfg.fonteTema`).
+- Conexão por **Bluetooth (BLE, serviço FFF0 / canal FFF1)** e por **USB (Web Serial)**. Ao conectar, o painel não escreve nada. Controle recolhido atrás de "Liberar controle".
+- Escrita permitida só em: V-SET (0x00), I-SET (0x01) e liga/desliga da saída (0x12, valores 0 ou 1). Restaurar fábrica, reiniciar, zerar, endereço, baud e proteções ficam bloqueados.
+- Ligar a saída pede segunda confirmação no próprio botão (expira em 6 s). Desligar é um toque.
+- Memórias (nome, tensão, corrente): guardadas em `db.fonteMem`, portanto **entram no backup**. Tocar numa memória só preenche os campos.
+- Alterado: potência exibida = tensão × corrente medidas (o registrador de potência parecia ter escala diferente da tabela do fabricante).
+- Novo: aviso quando o V-SET aplicado fica perto ou acima da tensão de entrada (a saída pode não chegar ao valor).
+- Ao sair da tela, ao deslogar ou por inatividade (padrão 10 min), o painel **desconecta**. A fonte continua no estado em que estava (saída ligada continua ligada).
+- Removido: botão "Zerar Ah/Wh" (o valor 1 no registrador 0x21 não zerou os contadores na fonte real; comando correto ainda desconhecido).
+- Esquema de dados: `db.fonteMem[]` (`id,nome,v,i`) e `cfg.fonteTema`. Migração idempotente, sem apagar nada.
+- Arquivos entregues: index.html, sw.js (cache `microlab-os-v12-1`). Manifest não mudou.
+- Testes (jsdom, America/Bahia, fonte serial simulada): 23 verificações. Cobrem migração, atalho e permissão, leitura, potência, escrita de V/I, aviso de entrada, ligar com 2 toques, trava de escrita, memórias (incluindo no backup), tema, desconexão ao sair e abertura de todas as rotas sem erro de JavaScript. **Não rodei de novo a bateria completa de regressão da v11.**
+- **Não testado:** Bluetooth e USB reais dentro do OS, a aparência das telas (tamanho dos números no celular e no notebook), escalas de corrente e Wh com carga conhecida, comportamento no Brave.
+- Como atualizar: baixe um backup em Ajustes antes. Suba `index.html` e `sw.js` no repositório e abra o app online duas vezes. No Brave, ative `brave://flags/#brave-web-bluetooth-api` para usar o Bluetooth.
+- Pendente: comando correto para zerar Ah/Wh, ventilação (sem registrador documentado), backup com senha, sincronização, pendências menores da v12.
