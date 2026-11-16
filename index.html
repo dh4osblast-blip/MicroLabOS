@@ -164,6 +164,47 @@ html[data-lay=desk] .fnt .scopes{grid-template-columns:1fr 1fr 1fr}
 html[data-lay=desk] .fnt .scr.pw .dg{font-size:clamp(34px,19cqw,88px)}
 html[data-lay=desk] .fnt .cvs{min-height:170px}
 html[data-lay=desk] .fnt .fbot{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start}
+.fnt .kh,.fnt .kn,.fnt .kt,.fnt .pd,.fnt .mnm{display:none}
+.fnt .ftop,.fnt .kcs,.fnt .kc,.fnt .kb{display:contents}
+.fnt .pd{width:9px;height:9px;border-radius:50%;background:var(--sk);opacity:0;flex:none}.fnt .pd.on{opacity:1}
+html[data-lay=desk] .fnt{display:grid;grid-template-columns:minmax(0,1fr) 300px;grid-template-rows:auto auto auto minmax(150px,.85fr) minmax(0,1.3fr) auto;column-gap:14px;row-gap:12px;height:calc(100vh - 64px);min-height:640px;box-sizing:border-box}
+html[data-lay=desk] .fnt .ftop{grid-column:1/-1;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+html[data-lay=desk] .fnt .ftop .fh{margin:0;font-size:22px;order:0}
+html[data-lay=desk] .fnt .ftop .fh span{display:none}
+html[data-lay=desk] .fnt .ftop .chips{margin:0;order:1}
+html[data-lay=desk] .fnt .ftop .hb{margin:0 0 0 auto;order:2}
+html[data-lay=desk] .fnt .ftop .hb #f_st{display:none}
+html[data-lay=desk] .fnt #f_opd,html[data-lay=desk] .fnt #f_alert{grid-column:1/-1;margin:0}
+html[data-lay=desk] .fnt .scopes{grid-column:1;grid-row:4;min-height:0}
+html[data-lay=desk] .fnt .scr .hd{order:0}
+html[data-lay=desk] .fnt .scr .dg{order:1;justify-content:center;font-size:clamp(34px,3.4vw,62px)}
+html[data-lay=desk] .fnt .scr .cvs{order:2;min-height:60px}
+html[data-lay=desk] .fnt .scr .dv{order:3}
+html[data-lay=desk] .fnt .info{grid-column:1/-1;grid-row:6;margin:0}
+html[data-lay=desk] .fnt .fbot{display:contents}
+html[data-lay=desk] .fnt .fm{grid-column:2;grid-row:4/6;display:flex;flex-direction:column;min-height:0;border:1px solid var(--ln);border-radius:16px;background:var(--pn);padding:14px}
+html[data-lay=desk] .fnt .fm h2{margin:0 0 10px;font-size:17px;color:var(--tx)}
+html[data-lay=desk] .fnt .fm .mems{flex-direction:column;overflow-y:auto;overflow-x:hidden;flex:1;min-height:0}
+html[data-lay=desk] .fnt .fm .mc{width:100%;box-sizing:border-box}
+html[data-lay=desk] .fnt .fm .mnm{display:block;width:100%;box-sizing:border-box;margin-top:10px;font:600 14px Poppins,system-ui,sans-serif;padding:9px 10px;border:1.5px solid var(--ln);border-radius:10px;background:var(--bg);color:var(--tx)}
+html[data-lay=desk] .fnt .fm .note{font-size:11px}
+html[data-lay=desk] .fnt .fc2{grid-column:1;grid-row:5;display:grid;grid-template-columns:minmax(0,1fr) 250px;grid-template-rows:auto auto auto 1fr;gap:12px;min-height:0}
+html[data-lay=desk] .fnt .fc2 h2{display:none}
+html[data-lay=desk] .fnt .fc2 .sw{grid-column:2;grid-row:1;padding:10px 12px;border:1px solid var(--ln);border-radius:12px;background:var(--pn);justify-content:space-between}
+html[data-lay=desk] .fnt #f_ctl{display:contents}
+html[data-lay=desk] .fnt .kcs{display:grid;grid-column:1;grid-row:1/6;grid-template-columns:1fr 1fr;gap:12px;min-height:0}
+html[data-lay=desk] .fnt .kc{display:flex;flex-direction:column;align-items:center;gap:6px;border:1px solid var(--ln);border-radius:16px;background:var(--pn);padding:12px;min-height:0;min-width:0}
+html[data-lay=desk] .fnt .kh{display:flex;justify-content:space-between;width:100%;font-size:13px;color:var(--tx)}
+html[data-lay=desk] .fnt .kh span{color:var(--mu);font-size:11px}
+html[data-lay=desk] .fnt .kn{display:flex;flex:1;min-height:0;width:100%;align-items:center;justify-content:center;touch-action:none;outline-offset:2px;border-radius:12px}
+html[data-lay=desk] .fnt .kc label{font-size:0}
+html[data-lay=desk] .fnt .kc .st{justify-content:center}
+html[data-lay=desk] .fnt .pd{display:inline-block}
+html[data-lay=desk] .fnt .kt{display:block;font-size:10px;color:var(--mu)}
+html[data-lay=desk] .fnt .kb{display:flex;flex-direction:column;gap:10px;grid-column:2;grid-row:2}
+html[data-lay=desk] .fnt #f_msg{grid-column:2;grid-row:3}
+html[data-lay=desk] .fnt .fc2 .note{grid-column:2;grid-row:4;align-self:start}
+html[data-lay=desk] .fnt #f_ctl:not(.open) .kcs,html[data-lay=desk] .fnt #f_ctl:not(.open) .kb{opacity:.45}
 </style>
 </head>
 <body>
@@ -507,7 +548,7 @@ return`<h1>Gerador de PIX</h1><div class="row"><label>Valor (R$)<input id="pv" t
 function pxg(){const cd=pixCode(+$('#pv').value,$('#pt').value);$('#pxo').innerHTML=`<div id="qr" style="margin:16px 0"></div><label>Pix copia e cola<textarea rows="4" readonly id="pc">${cd}</textarea></label><p><button class="btn g" onclick="navigator.clipboard.writeText($('#pc').value)">Copiar código</button></p>`;try{const q=qrcode(0,'M');q.addData(cd);q.make();$('#qr').innerHTML='<img alt="QR do Pix" src="'+q.createDataURL(5,2)+'">'}catch(e){$('#qr').textContent='Não foi possível gerar o QR. Use o copia e cola.'}}
 
 function cfg(){const fb=(k,t)=>`<label class="btn g">${t}<input type="file" accept="image/*" hidden onchange="up('${k}',this)"></label>`,pf=(k,l)=>`<label>${l}<input value="${esc(db.cfg[k])}" onchange="db.cfg.${k}=this.value.trim();save()"></label>`;
-return`<h1>Configurações</h1><p class="nt">Versão 12.5 · cache microlab-os-v12-5</p>
+return`<h1>Configurações</h1><p class="nt">Versão 12.6 · cache microlab-os-v12-6</p>
 <h2>Fundo do topo da tela inicial</h2><div class="row">${[['#ffffff','Degradê padrão'],['#102040','Azul-marinho'],['#1B6FD1','Azul MicroLab']].map(([c,n])=>`<button class="btn g" onclick="db.cfg.bg='${c}';delete db.cfg.bgImg;save();go('cfg')">${n}</button>`).join('')}${fb('bgImg','Usar imagem')}</div>
 <h2>Logomarca</h2><p class="nt">A logo da MicroLab já vem instalada. Envie outras só se quiser trocar.</p><div class="row">${fb('logoL','Logo para fundo claro (azul-marinho)')}${fb('logoD','Logo para fundo escuro (branca)')}<button class="btn g" onclick="delete db.cfg.logoL;delete db.cfg.logoD;save();go('cfg')">Voltar à logo padrão</button></div>
 <h2>Chave Pix</h2><div class="row">${pf('pixKey','Chave Pix')}${pf('pixNome','Nome do recebedor')}${pf('pixCid','Cidade')}</div><p class="nt">Usados no gerador de PIX. Confira o código no app do seu banco antes de cobrar.</p>
@@ -621,16 +662,15 @@ new MutationObserver(()=>{const on=!!document.getElementById('mn');fab.hidden=!o
 /* dentro dos formulários/modais (que bloqueiam o resto da tela) o botão aparece no canto superior direito */
 new MutationObserver(()=>{if(dl.open&&!dl.querySelector('.kcf'))dl.appendChild(mk())}).observe(dl,{childList:true});
 })();
-const FONTE=(function(){const root=document.createElement('div');root.className='fnt';root.innerHTML=`<div class="fh">Fonte de bancada <span>· ZK-SK150C · 48 V / 8,2 A</span></div><div class="hb" id="f_bar"><span class="chip" id="f_st"><i class="dot"></i><span id="f_sttxt">Desconectado</span></span>
+const FONTE=(function(){const root=document.createElement('div');root.className='fnt';root.innerHTML=`<div class="ftop"><div class="fh">Fonte de bancada <span>· ZK-SK150C · 48 V / 8,2 A</span></div><div class="hb" id="f_bar"><span class="chip" id="f_st"><i class="dot"></i><span id="f_sttxt">Desconectado</span></span>
 <button id="f_bble">Conectar Bluetooth</button><button id="f_busb" class="g">Conectar USB</button><button id="f_bdis" class="g" hidden>Desconectar</button>
-<button class="g" id="f_bop" aria-expanded="false">▾ Opções</button><button class="g" id="f_bth">Cores: visor</button></div>
+<button class="g" id="f_bop" aria-expanded="false">▾ Opções</button><button class="g" id="f_bth">Cores: visor</button></div><div class="chips"><span class="chip" id="f_cm">Modo --</span><span class="chip" id="f_co"><i></i>Saída --</span><span class="chip" id="f_cp">Proteção --</span><span class="chip" id="f_cc">Sem conexão</span></div></div>
 <div id="f_opd" hidden>
 <label>Endereço<br><input id="f_addr" type="number" min="1" max="247" value="1" style="width:80px"></label>
 <label>Baud (USB)<br><select id="f_baud"><option>115200</option><option>9600</option><option>19200</option><option>38400</option><option>57600</option></select></label>
 <label>Escala da corrente<br><select id="f_iscale"><option value="1000">÷1000 (0,001 A)</option><option value="100">÷100 (0,01 A)</option></select></label>
 <p class="note">Só escreve em V-SET, I-SET, liga/desliga da saída. Calibração, fábrica, reiniciar, endereço, velocidade e o canal de configuração do módulo Bluetooth ficam de fora de propósito.</p></div>
 <div id="f_alert" role="alert" hidden></div>
-<div class="chips"><span class="chip" id="f_cm">Modo --</span><span class="chip" id="f_co"><i></i>Saída --</span><span class="chip" id="f_cp">Proteção --</span><span class="chip" id="f_cc">Sem conexão</span></div>
 <div class="scopes">
 <div class="scr v"><div class="hd"><span>Tensão de saída</span><span class="set" id="f_vset">V-SET --</span></div><div class="cvs"><canvas id="f_cv"></canvas></div><div class="dg"><span id="f_vout">--,--</span><u>V</u></div><div class="dv" id="f_cvs_"></div></div>
 <div class="scr a"><div class="hd"><span>Corrente de saída</span><span class="set" id="f_iset">I-SET --</span></div><div class="cvs"><canvas id="f_ca"></canvas></div><div class="dg"><span id="f_iout">-,---</span><u>A</u></div><div class="dv" id="f_cas_"></div></div>
@@ -641,16 +681,14 @@ const FONTE=(function(){const root=document.createElement('div');root.className=
 <div>Capacidade<b><span id="f_ah">--</span> Ah</b></div><div>Energia<b><span id="f_wh">--</span> Wh</b></div>
 <div>Tempo ligada<b id="f_tm">--:--:--</b></div><div>Modelo / firmware<b><span id="f_mdl">--</span> / <span id="f_ver">--</span></b></div>
 </div>
-<div class="fbot"><div class="fcol"><h2>Memórias</h2>
+<div class="fbot"><div class="fcol fm"><h2>Memórias</h2>
 <div class="mems" id="f_mems"></div>
+<input id="f_mname" class="mnm" maxlength="30" placeholder="Nome da memória" aria-label="Nome da memória">
 <p style="margin:8px 0"><button class="g" id="f_bsavm">Salvar como memória</button> <button class="g" id="f_bdelm" hidden>Excluir memória selecionada</button></p>
 <p class="note">Tocar em uma memória só preenche os campos de controle. Nada é enviado à fonte e a saída não liga sozinha. As memórias ficam neste navegador.</p>
-</div><div class="fcol"><h2>Controle</h2>
+</div><div class="fcol fc2"><h2>Controle</h2>
 <label class="sw"><input type="checkbox" id="f_en"> Liberar controle</label>
-<div id="f_ctl">
-<label>Tensão (V)<div class="st"><button class="g" id="f_vm" aria-label="Diminuir tensão">−</button><input id="f_nv" type="number" step="0.01" min="0.5" max="48" value="5.00"><button class="g" id="f_vp" aria-label="Aumentar tensão">+</button></div></label>
-<label>Corrente (A)<div class="st"><button class="g" id="f_im" aria-label="Diminuir corrente">−</button><input id="f_ni" type="number" step="0.001" min="0" max="8.2" value="1.000"><button class="g" id="f_ip" aria-label="Aumentar corrente">+</button></div></label>
-<button id="f_bset">Aplicar V e I</button><button id="f_bout" class="g">Ligar saída</button><button class="g" id="f_bcan" hidden>Cancelar</button>
+<div id="f_ctl"><div class="kcs"><div class="kc"><div class="kh"><b>V-SET</b><span>0–40 V</span></div><div class="kn" id="f_kv"></div><label>Tensão (V)<div class="st"><button class="g" id="f_vm" aria-label="Diminuir tensão">−</button><input id="f_nv" type="number" step="0.01" min="0.5" max="48" value="5.00"><button class="g" id="f_vp" aria-label="Aumentar tensão">+</button><i class="pd" id="f_pv" title="Valor ainda não aplicado"></i></div></label><div class="kt">Roda do mouse · Arrastar · Setas</div></div><div class="kc"><div class="kh"><b>I-SET</b><span>0–8 A</span></div><div class="kn" id="f_ki"></div><label>Corrente (A)<div class="st"><button class="g" id="f_im" aria-label="Diminuir corrente">−</button><input id="f_ni" type="number" step="0.001" min="0" max="8.2" value="1.000"><button class="g" id="f_ip" aria-label="Aumentar corrente">+</button><i class="pd" id="f_pi" title="Valor ainda não aplicado"></i></div></label><div class="kt">Roda do mouse · Arrastar · Setas</div></div></div><div class="kb"><button id="f_bset">Aplicar V e I</button><button id="f_bout" class="g">Ligar saída</button><button class="g" id="f_bcan" hidden>Cancelar</button></div>
 </div>
 <div id="f_msg" role="status"></div>
 <p class="note">Ligar a saída pede uma segunda confirmação no próprio botão (some em 6 segundos).</p></div></div>
@@ -685,7 +723,7 @@ const PROT=['Normal','Sobretensão (OVP)','Sobrecorrente (OCP)','Sobrepotência 
 const N=120;let T=null,cl=null,run=false,addr=1,last=[],H=[],S={v:null,i:null},closer=null,mem=[],sel=null;
 function msg(t,e){$('msg').textContent=t;$('msg').className=e?'err':''}
 function ui(on,txt){$('bar').classList.toggle('on',on);$('sttxt').textContent=txt;$('cc').textContent=on?txt:'Sem conexão';$('bble').hidden=$('busb').hidden=on;$('bdis').hidden=!on;$('en').checked=false;lock()}
-function lock(){$('ctl').classList.toggle('open',$('en').checked&&run);cancelTwo()}
+function lock(){const o=$('en').checked&&run;$('ctl').classList.toggle('open',o);$('ctl').inert=!o;cancelTwo()}
 const nice=(x,min)=>{x=Math.max(x,min);const e=Math.pow(10,Math.floor(Math.log10(x)));for(const m of[1,2,2.5,5,10])if(m*e>=x-1e-9)return m*e};
 function scope(id,data,set,min,un,dec){
   const c=$(id),k=devicePixelRatio||1,w=c.clientWidth*k,h=c.clientHeight*k;if(!w||!h)return;c.width=w;c.height=h;
@@ -700,7 +738,7 @@ function scope(id,data,set,min,un,dec){
   const dv=top/5;$(id+'s_').textContent=F(dv,dv<0.1?3:dv<1?2:1)+' '+un+'/div · 6 s/div'}
 function drawAll(){scope('cv',H.map(x=>x.v),S.v,1,'V',2);scope('ca',H.map(x=>x.i),S.i,0.1,'A',+$('iscale').value===1000?3:2);scope('cw',H.map(x=>x.p),null,1,'W',1)}
 function show(r){
-  const is=+$('iscale').value,d=is===1000?3:2;last=r;
+  const is=+$('iscale').value,d=is===1000?3:2;last=r;kr();
   const v=r[2]/100,i=r[3]/is,p=Math.round(v*i*10)/10;S={v:r[0]/100,i:r[1]/is};
   $('vset').textContent='V-SET '+F(S.v,2)+' V';$('iset').textContent='I-SET '+F(S.i,d)+' A';
   $('vout').textContent=F(v,2);$('iout').textContent=F(i,d);$('pout').textContent=F(p,1);
@@ -736,7 +774,7 @@ async function connUSB(){
     closer=async()=>{try{await rd.cancel();rd.releaseLock();w.releaseLock();await port.close()}catch(e){}};start('USB '+$('baud').value);
   }catch(e){msg('Não foi possível abrir a porta: '+e.message,1)}}
 const lim=(x,a,b)=>Math.min(b,Math.max(a,x));
-function stp(id,d,a,b,dec){const e=$(id);e.value=lim((+e.value||0)+d,a,b).toFixed(dec)}
+function stp(id,d,a,b,dec){const e=$(id);e.value=lim((+e.value||0)+d,a,b).toFixed(dec);kr()}
 $('vm').onclick=()=>stp('nv',-0.1,LIM.vmin,LIM.vmax,2);$('vp').onclick=()=>stp('nv',0.1,LIM.vmin,LIM.vmax,2);
 $('im').onclick=()=>stp('ni',-0.05,0,LIM.imax,3);$('ip').onclick=()=>stp('ni',0.05,0,LIM.imax,3);
 $('bble').onclick=connBLE;$('busb').onclick=connUSB;$('bdis').onclick=()=>stop('Desconectado.');$('en').onchange=lock;
@@ -751,13 +789,32 @@ async function wrOut(n){try{await cl.wr(addr,0x12,n);msg(n?'Saída ligada.':'Sa�
 $('bout').onclick=()=>{if(!run||S.v==null)return;if(last[18]){cancelTwo();wrOut(0)}else twoStep($('bout'),`Confirmar: ligar ${F(S.v,2)} V · ${F(S.i,3)} A`,()=>wrOut(1))};
 $('bcan').onclick=cancelTwo;
 $('bop').onclick=()=>{const h=$('opd').hidden=!$('opd').hidden;$('bop').setAttribute('aria-expanded',String(!h))};
+/* botões giratórios (escala 0–40 V e 0–8 A; a trava de escrita continua em LIM) */
+const KN=[{id:'kv',pv:'pv',inp:'nv',max:40,min:LIM.vmin,dec:2,col:'var(--cv)',nm:'Tensão V-SET'},{id:'ki',pv:'pi',inp:'ni',max:8,min:0,dec:3,col:'var(--sk)',nm:'Corrente I-SET'}];
+const kA=(k,x)=>-135+270*lim(x,0,k.max)/k.max,kP=(r,a)=>{const t=a*Math.PI/180;return[140+r*Math.sin(t),140-r*Math.cos(t)]};
+const kArc=(k,x)=>{const a=kA(k,x);if(a<=-134.9)return'';const[x0,y0]=kP(116,-135),[x1,y1]=kP(116,a);return`M${x0.toFixed(1)} ${y0.toFixed(1)}A116 116 0 ${a+135>180?1:0} 1 ${x1.toFixed(1)} ${y1.toFixed(1)}`};
+function kBuild(k){const h=$(k.id);let t=`<path d="${kArc(k,k.max)}" fill="none" stroke="#1b2a42" stroke-width="7" stroke-linecap="round"/><path class="kp" fill="none" stroke="${k.col}" stroke-width="7" stroke-linecap="round"/>`;
+  for(let j=0;j<=40;j++){const a=-135+270*j/40,M=j%10===0,[x0,y0]=kP(M?99:104,a),[x1,y1]=kP(110,a);t+=`<line x1="${x0.toFixed(1)}" y1="${y0.toFixed(1)}" x2="${x1.toFixed(1)}" y2="${y1.toFixed(1)}" stroke="${M?'#e8eef9':'#46526b'}" stroke-width="${M?2.4:1.2}"/>`}
+  for(let j=0;j<=4;j++){const[x,y]=kP(131,-135+270*j/4);t+=`<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" text-anchor="middle" dominant-baseline="central" fill="#9fb0cc" font-size="14" font-family="monospace">${k.max/4*j}</text>`}
+  t+=`<circle cx="140" cy="140" r="86" fill="#0b1320" stroke="#1b2a42" stroke-width="2"/><circle cx="140" cy="140" r="78" fill="#e5eaf2"/><line class="kl" x1="140" y1="140" stroke="${k.col}" stroke-width="6" stroke-linecap="round"/><circle cx="140" cy="140" r="7" fill="${k.col}"/>`;
+  h.innerHTML=`<svg viewBox="0 0 280 280" style="width:100%;height:100%" aria-hidden="true">${t}</svg>`;
+  h.tabIndex=0;h.setAttribute('role','slider');h.setAttribute('aria-label',k.nm);h.setAttribute('aria-valuemin','0');h.setAttribute('aria-valuemax',String(k.max));
+  const stp_=e=>e.ctrlKey?1:e.shiftKey?0.01:0.1,get=()=>+$(k.inp).value||0;let dr=false;
+  const mv=e=>{const b=h.querySelector('svg').getBoundingClientRect(),g=Math.atan2(e.clientX-(b.left+b.width/2),-(e.clientY-(b.top+b.height/2)))*180/Math.PI;kSet(k,(lim(g,-135,135)+135)/270*k.max)};
+  h.addEventListener('wheel',e=>{e.preventDefault();kSet(k,get()+(e.deltaY<0?1:-1)*stp_(e))},{passive:false});
+  h.addEventListener('pointerdown',e=>{dr=true;h.setPointerCapture(e.pointerId);mv(e)});h.addEventListener('pointermove',e=>{if(dr)mv(e)});h.addEventListener('pointerup',()=>{dr=false});h.addEventListener('pointercancel',()=>{dr=false});
+  h.addEventListener('keydown',e=>{const d={ArrowUp:1,ArrowRight:1,ArrowDown:-1,ArrowLeft:-1,PageUp:10,PageDown:-10}[e.key];if(d){e.preventDefault();kSet(k,get()+d*stp_(e))}else if(e.key==='Home'){e.preventDefault();kSet(k,k.min)}else if(e.key==='End'){e.preventDefault();kSet(k,k.max)}})}
+function kSet(k,x){const f=10**k.dec;$(k.inp).value=lim(Math.round(x*f)/f,k.min,k.max).toFixed(k.dec);kr()}
+function kr(){KN.forEach(k=>{const h=$(k.id);if(!h.firstChild)kBuild(k);const v=lim(+$(k.inp).value||0,0,k.max),a=kA(k,v),[x,y]=kP(66,a),l=h.querySelector('.kl');h.querySelector('.kp').setAttribute('d',kArc(k,v));l.setAttribute('x2',x.toFixed(1));l.setAttribute('y2',y.toFixed(1));h.setAttribute('aria-valuenow',v.toFixed(k.dec));
+  const ap=last&&last.length?(k.id==='kv'?last[0]/100:last[1]/(+$('iscale').value||1000)):null;$(k.pv).classList.toggle('on',ap!=null&&Math.abs((+$(k.inp).value||0)-ap)>(k.dec===2?0.004:0.0004))})}
+$('nv').addEventListener('input',kr);$('ni').addEventListener('input',kr);
 /* memórias (guardadas neste navegador) */
 const memL=()=>db.fonteMem=db.fonteMem||[];
 function rmem(){$('mems').innerHTML=memL().length?memL().map(m=>`<button class="mc${m.id==sel?' on':''}" onclick="FONTE.pick('${m.id}')"><b>${esc(m.nome)}</b><span>${F(m.v,2)} V · ${F(m.i,3)} A</span></button>`).join(''):'<p class="note">Nenhuma memória salva. Ajuste a tensão e a corrente e toque em "Salvar como memória".</p>';$('bdelm').hidden=!sel}
-function pickM(id){const m=memL().find(x=>x.id==id);if(!m)return;sel=id;$('nv').value=m.v.toFixed(2);$('ni').value=m.i.toFixed(3);rmem();msg(`Memória "${m.nome}" carregada nos campos. Libere o controle e toque em Aplicar V e I.`)}
+function pickM(id){const m=memL().find(x=>x.id==id);if(!m)return;sel=id;$('nv').value=m.v.toFixed(2);$('ni').value=m.i.toFixed(3);kr();rmem();msg(`Memória "${m.nome}" carregada nos campos. Libere o controle e toque em Aplicar V e I.`)}
 $('bsavm').onclick=()=>{
-  const is=+$('iscale').value,ok=run&&last.length,v=ok?last[0]/100:+$('nv').value,i=ok?last[1]/is:+$('ni').value,nome=prompt('Nome da memória:',F(v,2)+' V');
-  if(nome===null)return;const m={id:Date.now().toString(36)+Math.random().toString(36).slice(2,5),nome:nome.trim().slice(0,30),v:Math.round(v*100)/100,i:Math.round(i*1000)/1000};
+  const is=+$('iscale').value,ok=run&&last.length,v=ok?last[0]/100:+$('nv').value,i=ok?last[1]/is:+$('ni').value,nome=$('mname').value.trim()||prompt('Nome da memória:',F(v,2)+' V');
+  if(nome===null)return;$('mname').value='';const m={id:Date.now().toString(36)+Math.random().toString(36).slice(2,5),nome:nome.trim().slice(0,30),v:Math.round(v*100)/100,i:Math.round(i*1000)/1000};
   if(!memOk(m)){msg('Memória não salva: informe um nome e valores dentro dos limites da fonte.',1);return}
   memL().push(m);sel=m.id;save();rmem();msg(`Memória "${m.nome}" salva (${ok?'valores atuais da fonte':'valores dos campos'}).`)};
 $('bdelm').onclick=()=>{const m=memL().find(x=>x.id==sel);if(m&&confirm('Excluir a memória "'+m.nome+'"?')){db.fonteMem=memL().filter(x=>x.id!=sel);sel=null;save();rmem()}};
@@ -766,7 +823,7 @@ const hov={};['cv','ca','cw'].forEach(id=>{const c=$(id),set=x=>{const r=c.getBo
 function tema(){const b=db.cfg.fonteTema==='br';root.classList.toggle('br',b);$('bth').textContent='Cores: '+(b?'marca':'visor')}
 $('bth').onclick=()=>{db.cfg.fonteTema=db.cfg.fonteTema==='br'?'':'br';save();tema();drawAll()};
 addEventListener('resize',drawAll);
-function enter(slot){slot.replaceWith(root);tema();rmem();drawAll()}
+function enter(slot){slot.replaceWith(root);tema();rmem();drawAll();lock();kr()}
 function leave(){cancelTwo();if(run)stop()}
 return{enter,leave,pick:pickM,redraw:drawAll}
 })();
