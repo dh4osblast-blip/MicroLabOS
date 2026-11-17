@@ -1,0 +1,18 @@
+## v13.0 — Motor de sincronização na nuvem (Firebase), ainda sem tela — 16/11
+- Novo: **sincronização em segundo plano** entre aparelhos usando Firebase Authentication (e-mail e senha) e Firestore. Sem configuração, o app funciona exatamente como na v12.6 (nenhuma chamada de rede). O `localStorage` (`microlab_os_v1`) continua sendo a base.
+- Novo: **migração idempotente**: toda lista (os, clientes, produtos, fornecedores, servicos, compras, vendas, fin, fixos, tecnicos, vendedores, fonteMem, users) ganha `id` estável (corrige ausentes/duplicados) e `updatedAt`. Registros antigos recebem `updatedAt=1`.
+- Novo: **carimbo automático** dentro de `save()`: o app compara cada registro com o último estado salvo e atualiza `updatedAt` só do que mudou.
+- Novo: **exclusão com data**: apagar um registro grava uma marca em `db.tomb[lista][id]` (fora das listas, para não afetar nenhuma tela); na nuvem vira `d:true`. Quem for editado depois da exclusão volta; exclusão mais nova vence edição mais antiga.
+- Novo: **cfg** mesclada por chave (`cfg._ts`): configurações diferentes alteradas em aparelhos diferentes se somam. **Contadores** `n`, `nv`, `nc`: vale o maior.
+- Novo: proteção contra sumiço em massa (mais de 10 registros somem de uma vez): não apaga na nuvem e baixa tudo de novo.
+- Novo: exclusão/edição só enviada quando há conexão; pendências ficam guardadas (`microlab_sync_meta`) e vão quando voltar a internet. Contas, chave e controle de sincronização ficam fora do backup e do `db`. O layout da tela continua só local.
+- Alterado: serviços padrão do catálogo agora têm id fixo (`seed1` a `seed6`); catálogos antigos com os nomes originais são reapontados (OS incluídas) para não duplicar entre aparelhos.
+- Alterado: custo fixo lançado no mês usa id fixo (`fx_<custo>_<mês>`), evitando lançamento em dobro quando dois aparelhos abrem no mesmo mês.
+- Alterado: **Restaurar backup** não apaga a nuvem: zera o controle de sincronização e deixa a mesclagem decidir (itens mais novos da nuvem prevalecem).
+- Alterado: `sw.js` cache `microlab-os-v13`; só arquivos do próprio app usam cache; Firebase/Google passam direto pela rede.
+- Técnica: Auth e Firestore via REST (`fetch`), sem SDK, para não depender de scripts externos em cache. Atualização por consulta incremental (carimbo do servidor) ao abrir, ao voltar para a aba, a cada 60 s e 4 s após salvar.
+- Console (provisório, até a tela): `SYNC.configurar({apiKey:"...",projectId:"..."})`, `SYNC.entrar(email,senha)`, `SYNC.agora()`, `SYNC.estado()`, `SYNC.sair()`.
+- Arquivos entregues: `index.html`, `sw.js` (cache `microlab-os-v13`).
+- Testes (jsdom, fuso America/Bahia, servidor Firestore simulado): 21 telas idênticas à v12.6; migração idempotente; dois aparelhos (envio, edição, exclusão, conflito offline, cfg por chave, contadores); token vencido; contas isoladas; recusa por regra; restaurar backup; proteção contra sumiço em massa; service worker. **Não testado**: Firebase real, celular real e Brave com a nuvem.
+- Limites conhecidos: dois aparelhos criando OS ao mesmo tempo offline podem repetir o número da OS; mesma peça com estoque alterado em dois aparelhos offline fica com o valor do mais recente; mudanças chegam em até ~1 min (sem tempo real).
+- Pendente: tela de login e sincronização em Ajustes (aguardando decisão).

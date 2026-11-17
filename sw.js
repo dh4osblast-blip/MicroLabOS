@@ -1,5 +1,6 @@
 // Troque o número da versão quando atualizar o index.html, para os aparelhos baixarem a novidade.
-const V='microlab-os-v12-6',F=['./','index.html','manifest.webmanifest','icon-192.png','icon-512.png'];
+const V='microlab-os-v13',F=['./','index.html','manifest.webmanifest','icon-192.png','icon-512.png'];
 self.addEventListener('install',e=>{e.waitUntil(caches.open(V).then(c=>c.addAll(F)).then(()=>self.skipWaiting()))});
 self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(k=>Promise.all(k.filter(x=>x!=V).map(x=>caches.delete(x)))).then(()=>self.clients.claim()))});
-self.addEventListener('fetch',e=>{if(e.request.method!=='GET')return;e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request)))});
+// Só os arquivos do próprio app usam cache. Firebase/Google (login e Firestore) são de outro domínio: passam direto pela rede e nunca são guardados.
+self.addEventListener('fetch',e=>{const r=e.request;if(r.method!=='GET'||new URL(r.url).origin!==self.location.origin)return;e.respondWith(caches.match(r).then(x=>x||fetch(r)))});
