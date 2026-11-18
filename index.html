@@ -221,6 +221,19 @@ html[data-lay=desk] .fnt .kb{display:flex;flex-direction:column;gap:10px;grid-co
 html[data-lay=desk] .fnt #f_msg{grid-column:2;grid-row:3}
 html[data-lay=desk] .fnt .fc2 .note{grid-column:2;grid-row:4;align-self:start}
 html[data-lay=desk] .fnt #f_ctl:not(.open) .kcs,html[data-lay=desk] .fnt #f_ctl:not(.open) .kb{opacity:.45}
+/* v14.3: layout das Opções da Fonte (sem corte, grade uniforme nas proteções, espaçamento do bloco Ligar saída) */
+.fnt .prt{container-type:inline-size}.fnt .prg{grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 16px;align-items:end}@container (min-width:520px){.fnt .prg{grid-template-columns:repeat(4,minmax(0,1fr))}}@container (min-width:980px){.fnt .prg{grid-template-columns:repeat(7,minmax(0,1fr))}}
+.fnt .prg label{display:flex;flex-direction:column;gap:4px;min-width:0;margin:0}
+.fnt .prg br{display:none}
+.fnt .prg select,.fnt .prg input{width:100%;box-sizing:border-box;height:42px;min-width:0}
+html[data-lay=desk] .fnt.opo{height:auto;min-height:calc(100vh - 64px);grid-template-rows:auto auto auto minmax(230px,auto) minmax(420px,auto) auto}
+html[data-lay=desk] .fnt.opo .scopes{min-height:230px}
+html[data-lay=desk] .fnt.opo .scr .cvs{min-height:90px}
+html[data-lay=desk] .fnt.opo .fc2{min-height:420px}
+html[data-lay=desk] .fnt .fc2{row-gap:14px}
+html[data-lay=desk] .fnt .kb{gap:12px;margin-bottom:6px}
+html[data-lay=desk] .fnt #f_msg{margin-top:6px;overflow-wrap:anywhere}
+html[data-lay=desk] .fnt .info{margin-top:4px}
 </style>
 </head>
 <body>
@@ -565,7 +578,7 @@ return`<h1>Gerador de PIX</h1><div class="row"><label>Valor (R$)<input id="pv" t
 function pxg(){const cd=pixCode(+$('#pv').value,$('#pt').value);$('#pxo').innerHTML=`<div id="qr" style="margin:16px 0"></div><label>Pix copia e cola<textarea rows="4" readonly id="pc">${cd}</textarea></label><p><button class="btn g" onclick="navigator.clipboard.writeText($('#pc').value)">Copiar código</button></p>`;try{const q=qrcode(0,'M');q.addData(cd);q.make();$('#qr').innerHTML='<img alt="QR do Pix" src="'+q.createDataURL(5,2)+'">'}catch(e){$('#qr').textContent='Não foi possível gerar o QR. Use o copia e cola.'}}
 
 function cfg(){const fb=(k,t)=>`<label class="btn g">${t}<input type="file" accept="image/*" hidden onchange="up('${k}',this)"></label>`,pf=(k,l)=>`<label>${l}<input value="${esc(db.cfg[k])}" onchange="db.cfg.${k}=this.value.trim();save()"></label>`;
-return`<h1>Configurações</h1><p class="nt">Versão 14.2 · cache microlab-os-v14.2</p>
+return`<h1>Configurações</h1><p class="nt">Versão 14.3 · cache microlab-os-v14.3</p>
 <h2>Fundo do topo da tela inicial</h2><div class="row">${[['#ffffff','Degradê padrão'],['#102040','Azul-marinho'],['#1B6FD1','Azul MicroLab']].map(([c,n])=>`<button class="btn g" onclick="db.cfg.bg='${c}';delete db.cfg.bgImg;save();go('cfg')">${n}</button>`).join('')}${fb('bgImg','Usar imagem')}</div>
 <h2>Logomarca</h2><p class="nt">A logo da MicroLab já vem instalada. Envie outras só se quiser trocar.</p><div class="row">${fb('logoL','Logo para fundo claro (azul-marinho)')}${fb('logoD','Logo para fundo escuro (branca)')}<button class="btn g" onclick="delete db.cfg.logoL;delete db.cfg.logoD;save();go('cfg')">Voltar à logo padrão</button></div>
 <h2>Chave Pix</h2><div class="row">${pf('pixKey','Chave Pix')}${pf('pixNome','Nome do recebedor')}${pf('pixCid','Cidade')}</div><p class="nt">Usados no gerador de PIX. Confira o código no app do seu banco antes de cobrar.</p>
@@ -689,7 +702,7 @@ const FONTE=(function(){const root=document.createElement('div');root.className=
 <label>Escala da corrente<br><select id="f_iscale"><option value="1000">÷1000 (0,001 A) · desta fonte (modelo 4008)</option><option value="100">÷100 (0,01 A) · só se o visor mostrar 2 casas</option></select></label>
 <p class="note">Escreve em V-SET, I-SET e liga/desliga da saída. As proteções só podem ser gravadas com a saída desligada e o controle liberado. Calibração, fábrica, reiniciar, endereço, velocidade e o canal de configuração do módulo Bluetooth ficam de fora de propósito.</p>
 <div class="prt"><h3>Proteções da fonte</h3>
-<div class="prg"><label>Grupo de memória<br><select id="f_pgrp"><option value="0">M0 (padrão ao ligar)</option><option value="1">M1</option><option value="2">M2</option><option value="3">M3</option><option value="4">M4</option><option value="5">M5</option><option value="6">M6</option><option value="7">M7</option><option value="8">M8</option><option value="9">M9</option><option value="10">M10</option></select></label><label>Unidade do OTP<br><select id="f_potu"><option value="C">°C</option><option value="F">°F</option></select></label><label>OVP (V)<br><input id="f_povp" type="number" step="0.01" disabled></label><label>OCP (A)<br><input id="f_pocp" type="number" step="0.001" disabled></label><label>OPP (W)<br><input id="f_popp" type="number" step="0.1" disabled></label><label>LVP (V)<br><input id="f_plvp" type="number" step="0.01" disabled></label><label>OTP<br><input id="f_potp" type="number" step="1" disabled></label></div>
+<div class="prg"><label>Grupo de memória<br><select id="f_pgrp"><option value="0">M0 (padrão)</option><option value="1">M1</option><option value="2">M2</option><option value="3">M3</option><option value="4">M4</option><option value="5">M5</option><option value="6">M6</option><option value="7">M7</option><option value="8">M8</option><option value="9">M9</option><option value="10">M10</option></select></label><label>Unidade do OTP<br><select id="f_potu"><option value="C">°C</option><option value="F">°F</option></select></label><label>OVP (V)<br><input id="f_povp" type="number" step="0.01" disabled></label><label>OCP (A)<br><input id="f_pocp" type="number" step="0.001" disabled></label><label>OPP (W)<br><input id="f_popp" type="number" step="0.1" disabled></label><label>LVP (V)<br><input id="f_plvp" type="number" step="0.01" disabled></label><label>OTP<br><input id="f_potp" type="number" step="1" disabled></label></div>
 <p class="note" id="f_plk" role="status">Desligue a saída e libere o controle para alterar proteções.</p>
 <p class="note" id="f_pinfo"></p>
 <p style="margin:8px 0"><button class="g" id="f_prd" disabled>Ler da fonte</button> <button id="f_psv" disabled>Gravar proteções</button></p>
@@ -861,7 +874,7 @@ function twoStep(b,label,fn){if(two&&two.b===b){clearTimeout(two.t);const f=two.
 async function wrOut(n){try{await cl.wr(addr,0x12,n);ses&&(ses.cmdT=Date.now(),evAdd(ses.cmdT,'cmd',n?'Comando: ligar saída':'Comando: desligar saída'));msg(n?'Saída ligada.':'Saída desligada.')}catch(e){msg(e.message,1)}}
 $('bout').onclick=()=>{if(!run||S.v==null)return;if(last[18]){cancelTwo();wrOut(0)}else twoStep($('bout'),`Confirmar: ligar ${F(S.v,2)} V · ${F(S.i,3)} A`,()=>wrOut(1))};
 $('bcan').onclick=cancelTwo;
-$('bop').onclick=()=>{const h=$('opd').hidden=!$('opd').hidden;$('bop').setAttribute('aria-expanded',String(!h))};
+$('bop').onclick=()=>{const h=$('opd').hidden=!$('opd').hidden;$('bop').setAttribute('aria-expanded',String(!h));root.classList.toggle('opo',!h);setTimeout(drawAll,0)};
 /* botões giratórios (escala 0–40 V e 0–8 A; a trava de escrita continua em LIM) */
 const KN=[{id:'kv',pv:'pv',inp:'nv',max:40,min:LIM.vmin,dec:2,col:'var(--cv)',nm:'Tensão V-SET'},{id:'ki',pv:'pi',inp:'ni',max:8,min:0,dec:3,col:'var(--sk)',nm:'Corrente I-SET'}];
 const kA=(k,x)=>-135+270*lim(x,0,k.max)/k.max,kP=(r,a)=>{const t=a*Math.PI/180;return[140+r*Math.sin(t),140-r*Math.cos(t)]};
