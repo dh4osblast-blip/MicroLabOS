@@ -1,5 +1,5 @@
 // Troque o número da versão quando atualizar o index.html, para os aparelhos baixarem a novidade.
-const V='microlab-os-v16';
+const V='microlab-os-v17';
 // Essenciais: sem eles o app não abre offline. Opcionais: se algum falhar (ex.: ícone ausente), o cache continua valendo.
 const CORE=['./','./index.html'],OPC=['./manifest.webmanifest','./icon-192.png','./icon-512.png'];
 self.addEventListener('install',e=>{e.waitUntil((async()=>{
